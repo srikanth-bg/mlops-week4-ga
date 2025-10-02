@@ -1,5 +1,5 @@
 outs:
-- md5: 32fc03e93e97f776f9771ddd4352fd3f
+- md5: 7abf5a3a36412a49c323805e9571b4fa
   size: 2753
   hash: md5
   path: model.joblib
