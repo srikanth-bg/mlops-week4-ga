@@ -35,15 +35,12 @@ jobs:
           KEY_FILE="${RUNNER_TEMP}/gcp-key.json"
           printf '%s' "$GCP_SA_KEY" > "$KEY_FILE"
 
-          python - <<'PY'
-            import json, os, sys
-            p = os.environ["RUNNER_TEMP"] + "/gcp-key.json"
-            if not (os.path.exists(p) and os.path.getsize(p) > 0):
-                print("Key missing or empty"); sys.exit(1)
-            with open(p, "rb") as f:
-                json.load(f)
-            print("JSON OK")
-            PY
+          jq -e '
+            .type == "service_account"
+            and (.project_id // empty) != ""
+            and (.private_key // empty) != ""
+            and (.client_email // empty) != ""
+          ' "$KEY_FILE" >/dev/null
 
           echo "GOOGLE_APPLICATION_CREDENTIALS=$KEY_FILE" >> "$GITHUB_ENV"
 
