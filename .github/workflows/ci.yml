@@ -50,7 +50,7 @@ jobs:
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "## CI Report (\${GITHUB_REF_NAME})" > report.md
+          echo "## CI Report (${GITHUB_REF_NAME})" > report.md
           echo "" >> report.md
           echo "### Test Output" >> report.md
           echo '```' >> report.md
