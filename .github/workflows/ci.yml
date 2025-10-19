@@ -34,13 +34,10 @@ jobs:
         run: |
           KEY_FILE="${RUNNER_TEMP}/gcp-key.json"
           printf '%s' "$GCP_SA_KEY" > "$KEY_FILE"
-          chmod 600 "$KEY_FILE"
           echo "GOOGLE_APPLICATION_CREDENTIALS=$KEY_FILE" >> "$GITHUB_ENV"
 
       - name: Pull data & model from DVC
-        run: |
-          dvc remote list -v
-          dvc pull -v
+        run: dvc pull -v
 
       - name: Run unittest suite
         run: |
