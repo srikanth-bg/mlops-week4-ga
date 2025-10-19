@@ -9,11 +9,10 @@ def load_data(path="data.csv"):
     return pd.read_csv(path)
 
 def evaluate(model_path="model.joblib", data_path="data.csv", target_col="species"):
-    print("...inside evaluate.py")
     model = load_model(model_path)
     df = load_data(data_path)
     X = df.drop(columns=[target_col])
     y = df[target_col]
     y_pred = model.predict(X)
-    print(f"accuracy: {accuracy_score(y, y_pred)}")
-    return {"accuracy": accuracy_score(y, y_pred)}
+    acc = accuracy_score(y, y_pred)
+    return {"accuracy": acc}
