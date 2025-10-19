@@ -34,14 +34,6 @@ jobs:
         run: |
           KEY_FILE="${RUNNER_TEMP}/gcp-key.json"
           printf '%s' "$GCP_SA_KEY" > "$KEY_FILE"
-
-          jq -e '
-            .type == "service_account"
-            and (.project_id // empty) != ""
-            and (.private_key // empty) != ""
-            and (.client_email // empty) != ""
-          ' "$KEY_FILE" >/dev/null
-
           echo "GOOGLE_APPLICATION_CREDENTIALS=$KEY_FILE" >> "$GITHUB_ENV"
 
       - name: Pull data & model from DVC
