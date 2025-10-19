@@ -1,4 +1,4 @@
 joblib
-dvc[gcs]
+dvc[gs]
 google-auth
 google-cloud-storage
