@@ -15,4 +15,3 @@ def basic_schema_checks(df: pd.DataFrame):
     # 4) target labels (either strings or encoded ints)
     uniq = set(df["species"].unique())
     assert uniq.issubset({"setosa","versicolor","virginica"})
-    print("inside validte.py...data all good!")
