@@ -14,5 +14,5 @@ def evaluate(model_path="model.joblib", data_path="data.csv", target_col="specie
     X = df.drop(columns=[target_col])
     y = df[target_col]
     y_pred = model.predict(X)
-    acc = accuracy_score(y, y_pred)
-    return {"accuracy": acc}
+    print(f"accuracy: {accuracy_score(y, y_pred)}")
+    return {"accuracy": accuracy_score(y, y_pred)}
