@@ -9,15 +9,18 @@ def load_model_from_registry(
     experiment_name: str | None = None
 ):
 
+    print("1. Getting MLFLOW_TRACKING_URI")
     tracking_uri = os.getenv("MLFLOW_TRACKING_URI")
     if not tracking_uri:
         raise RuntimeError("MLFLOW_TRACKING_URI is not set")
+    print(f"Got MLflow tracking URI: {tracking_uri}")
 
     mlflow.set_tracking_uri(tracking_uri)
     exp = mlflow.get_experiment_by_name(experiment_name)
     if exp is None:
         raise RuntimeError("Experiment not found")
-
+    print(f"2. Got exp: {exp}")
+    
     runs = mlflow.search_runs(
         [exp.experiment_id],
         filter_string=f"metrics.{metric_name} > 0",
@@ -26,9 +29,11 @@ def load_model_from_registry(
     )
     if runs.empty:
         raise RuntimeError(f"No runs with metric {metric_name} found")
+    print(f"3. Got runs: {runs}")
 
     run_id = runs.iloc[0].run_id
     model_uri = f"runs:/{run_id}/model"
+    print(f"Got model uri: {model_uri}")
     return mlflow.pyfunc.load_model(model_uri)
 
 def load_data(path="data.csv"):
