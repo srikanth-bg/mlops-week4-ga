@@ -1,4 +1,4 @@
-name: CI (unittest + DVC + CML)
+name: CI Week5 (MLflow)
 
 on:
   push:
@@ -10,6 +10,9 @@ on:
 permissions:
   contents: write
   pull-requests: write
+
+env:
+  MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
 
 jobs:
   test:
@@ -36,7 +39,7 @@ jobs:
           printf '%s' "$GCP_SA_KEY" > "$KEY_FILE"
           echo "GOOGLE_APPLICATION_CREDENTIALS=$KEY_FILE" >> "$GITHUB_ENV"
 
-      - name: Pull data & model from DVC
+      - name: Pull data from DVC
         run: dvc pull -v
 
       - name: Run unittest suite

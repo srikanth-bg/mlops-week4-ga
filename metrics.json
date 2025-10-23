@@ -1,6 +1,8 @@
 {
-  "version": "v2",
   "n_samples": 150,
   "accuracy": 0.8666666666666667,
-  "f1_macro": 0.8666666666666667
+  "f1_macro": 0.8666666666666667,
+  "timestamp": "2025-10-23 15:19:15",
+  "max_depth": 4,
+  "random_state": 42
 }
