@@ -28,20 +28,16 @@ def load_model_from_registry(
     if runs.empty:
         raise RuntimeError(f"No runs with metric {metric_name} found")
 
-    # run_id = runs.iloc[0].run_id
-    # model_uri = f"runs:/{run_id}/model"
-    # return mlflow.pyfunc.load_model(model_uri)
+    run_id = runs.iloc[0].run_id
+    model_uri = f"runs:/{run_id}/iris_model"
+    return mlflow.pyfunc.load_model(model_uri)
 
-    run = runs.iloc[0]
-    artifact_uri = run.artifact_uri
-    print(f"1. Artifact_uri: {artifact_uri}")
-    pkl_remote = artifact_uri.rstrip("/") + "/model.pkl"
-    print(f"2. pkl_remote: {pkl_remote}")
-    local_pkl = download_artifacts(artifact_uri=pkl_remote)
-    print(f"3. local_pkl: {local_pkl}")
-    model = joblib.load(local_pkl) 
-    print(f"4. model loaded")
-    return model
+    # run = runs.iloc[0]
+    # artifact_uri = run.artifact_uri
+    # pkl_remote = artifact_uri.rstrip("/") + "/model.pkl"
+    # local_pkl = download_artifacts(artifact_uri=pkl_remote)
+    # model = joblib.load(local_pkl) 
+    # return model
 
 def load_data(path="data.csv"):
     return pd.read_csv(path)
