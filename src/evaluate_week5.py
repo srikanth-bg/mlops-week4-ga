@@ -34,9 +34,13 @@ def load_model_from_registry(
 
     run = runs.iloc[0]
     artifact_uri = run.artifact_uri
+    print(f"1. Artifact_uri: {artifact_uri}")
     pkl_remote = artifact_uri.rstrip("/") + "/model.pkl"
+    print(f"2. pkl_remote: {pkl_remote}")
     local_pkl = download_artifacts(artifact_uri=pkl_remote)
+    print(f"3. local_pkl: {local_pkl}")
     model = joblib.load(local_pkl) 
+    print(f"4. model loaded")
     return model
 
 def load_data(path="data.csv"):
