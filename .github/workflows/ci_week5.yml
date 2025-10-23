@@ -44,7 +44,7 @@ jobs:
 
       - name: Run unittest suite
         run: |
-          python -m unittest discover -s tests -p "test_*.py" > test_output.txt 2>&1
+          python -m unittest discover -s tests -p "test_*.py"
           echo "metric,value" > metrics.csv
           ACC_LINE=$(grep -i "accuracy" test_output.txt || true)
           if [ -z "$ACC_LINE" ]; then echo "accuracy,NA" >> metrics.csv; else echo "$ACC_LINE" | awk -F'[: ]+' '{print "accuracy,"$NF}' >> metrics.csv; fi
