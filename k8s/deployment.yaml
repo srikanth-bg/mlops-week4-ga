@@ -4,7 +4,7 @@ metadata:
   name: iris-api
   labels: { app: iris-api }
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels: { app: iris-api }
   template:
