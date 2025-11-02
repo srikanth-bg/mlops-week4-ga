@@ -72,12 +72,26 @@ jobs:
 
       # -------------------- CD starts here (Week-6) --------------------
 
-      - name: Set up gcloud for build/deploy
+      # - name: Set up gcloud for build/deploy
+      #   uses: google-github-actions/setup-gcloud@v2
+      #   with:
+      #     project_id: ${{ env.PROJECT_ID }}
+      #     service_account_key: ${{ secrets.GCP_SA_KEY_WK6_ARTIFACT_REGISTRY }}
+      #     export_default_credentials: true
+
+      # 1) Authenticate first (uses JSON key secret)
+      - name: Auth to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY_WK6_ARTIFACT_REGISTRY }}
+
+      # 2) Install gcloud + components (no auth inputs here)
+      - name: Set up gcloud
         uses: google-github-actions/setup-gcloud@v2
         with:
           project_id: ${{ env.PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY_WK6_ARTIFACT_REGISTRY }}
-          export_default_credentials: true
+          install_components: 'gke-gcloud-auth-plugin'   # needed for kubectl on newer clusters
+
 
       - name: Configure Docker to use Artifact Registry
         run: gcloud auth configure-docker $REGION-docker.pkg.dev -q
