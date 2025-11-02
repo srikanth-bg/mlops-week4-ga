@@ -2,7 +2,7 @@
   "n_samples": 150,
   "accuracy": 0.8666666666666667,
   "f1_macro": 0.8666666666666667,
-  "timestamp": "2025-10-23 15:19:15",
-  "max_depth": 4,
+  "timestamp": "2025-11-02 13:42:46",
+  "max_depth": 3,
   "random_state": 42
 }

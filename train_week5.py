@@ -10,7 +10,7 @@ import mlflow
 from mlflow import MlflowClient
 from mlflow.models import infer_signature
 from pprint import pprint
-
+# comment1 - to be able to do git push
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--data",    required=True, help="Path to data.csv")
