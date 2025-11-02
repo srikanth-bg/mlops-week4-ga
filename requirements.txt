@@ -5,3 +5,5 @@ google-cloud-storage
 pandas
 scikit-learn==1.7.2
 mlflow
+fastapi
+uvicorn
