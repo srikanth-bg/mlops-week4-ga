@@ -10,6 +10,7 @@ def load_data(path="data.csv"):
 
 def evaluate(model_path="model.joblib", data_path="data.csv", target_col="species"):
     model = load_model(model_path)
+    print ("Inside evaluate method. Model loaded")
     df = load_data(data_path)
     X = df.drop(columns=[target_col])
     y = df[target_col]
