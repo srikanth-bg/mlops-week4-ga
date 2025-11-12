@@ -1,18 +1,39 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: iris-api
-  labels: { app: iris-api }
+  name: wk7-log-ml-service
 spec:
   replicas: 1
   selector:
-    matchLabels: { app: iris-api }
+    matchLabels:
+      app: wk7-log-ml-service
   template:
     metadata:
-      labels: { app: iris-api }
+      labels:
+        app: wk7-log-ml-service
     spec:
+      serviceAccountName: telemetry-access  # See below
       containers:
-      - name: iris-api
-        image: REPLACE_WITH_IMAGE                # CI will substitute this
+      - name: fastapi-container
+        image: us-central1-docker.pkg.dev/zinc-window-473418-r5/my-repo/wk7_log:latest
         ports:
-        - containerPort: 8000
+        - containerPort: 8200
+        readinessProbe:
+          httpGet:
+            path: /ready_check
+            port: 8200
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /live_check
+            port: 8200
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"

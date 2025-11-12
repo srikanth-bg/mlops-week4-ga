@@ -7,3 +7,7 @@ scikit-learn==1.7.2
 mlflow
 fastapi
 uvicorn
+pydantic
+
+# Exporter for Google Cloud
+opentelemetry-exporter-gcp-trace

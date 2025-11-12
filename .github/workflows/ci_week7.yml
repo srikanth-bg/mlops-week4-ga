@@ -1,4 +1,4 @@
-name: CI Week6 (MLflow)
+name: CI Week7 (Monitoring)
 
 on:
   push:
@@ -16,7 +16,7 @@ env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   REGION: ${{ secrets.GAR_REGION }}
   GAR_REPO: ${{ secrets.GAR_REPO }}
-  IMAGE_NAME: iris-api-image-wk6
+  IMAGE_NAME: iris-api-image-wk7
   GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }}
   GKE_LOCATION: ${{ secrets.GKE_LOCATION }}
 
@@ -116,12 +116,13 @@ jobs:
           # Substitute image into deployment and apply
           sed "s|REPLACE_WITH_IMAGE|$IMAGE_URI|g" k8s/deployment.yaml | kubectl apply -f -
           kubectl apply -f k8s/service.yaml
+          kubectl apply -f k8s/hpa.yaml
 
       - name: Wait for rollout
         shell: bash
         run: |
-          kubectl rollout status deploy/iris-api --timeout=180s
-          kubectl get pods -l app=iris-api -o wide
+          kubectl rollout status deploy/wk7-log-ml-service --timeout=180s
+          kubectl get pods -l app=wk7-log-ml-service -o wide
 
       - name: Show Service and curl health
         id: probe
@@ -129,7 +130,7 @@ jobs:
         run: |
           # Try up to ~3 minutes to get an external IP
           for i in {1..18}; do
-            EXTERNAL_IP=$(kubectl get svc iris-api-svc -o jsonpath='{.status.loadBalancer.ingress[0].ip}' 2>/dev/null || true)
+            EXTERNAL_IP=$(kubectl get svc wk7-log-ml-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}' 2>/dev/null || true)
             if [ -z "$EXTERNAL_IP" ]; then
               echo "Waiting for LoadBalancer external IP..."
               sleep 10
@@ -139,7 +140,7 @@ jobs:
           done
           if [ -z "$EXTERNAL_IP" ]; then
             echo "::error::No EXTERNAL-IP yet. Check GKE service status."
-            kubectl get svc iris-api-svc -o wide
+            kubectl get svc wk7-log-ml-service -o wide
             exit 1
           fi
           echo "EXTERNAL_IP=$EXTERNAL_IP" >> $GITHUB_ENV

@@ -1,11 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: iris-api-svc
+  name: wk7-log-ml-service
 spec:
-  type: LoadBalancer
   selector:
-    app: iris-api
+    app: wk7-log-ml-service
   ports:
-  - port: 80
-    targetPort: 8000
+    - protocol: TCP
+      port: 80
+      targetPort: 8200
+  type: LoadBalancer

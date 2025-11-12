@@ -1,5 +1,5 @@
 # 1. Use official Python base image
-FROM python:3.10-slim
+FROM python:3.11-slim
 
 # 2. Set working directory
 WORKDIR /app
@@ -11,7 +11,7 @@ COPY . /app
 RUN pip install --no-cache-dir -r requirements.txt
 
 # 5. Expose port
-EXPOSE 8000
+EXPOSE 8200
 
 # 6. Command to run the server
-CMD ["uvicorn", "iris_fastapi:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "wk7_log:app", "--host", "0.0.0.0", "--port", "8200"]
