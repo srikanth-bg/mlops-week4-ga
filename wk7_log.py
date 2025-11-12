@@ -107,11 +107,13 @@ async def predict(input: IrisInput, request: Request):
 
         try:
             input_data = input.dict()
+            print(f"input_data: {input_data}")
             input_df = pd.DataFrame([input_data])
             prediction = model.predict(input_df)[0]
             result = {
                 "predicted_class": prediction
             }
+            print(f"result: {result}")
             latency = round((time.time() - start_time) * 1000, 2)
 
             logger.info(json.dumps({
