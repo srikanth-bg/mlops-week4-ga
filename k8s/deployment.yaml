@@ -15,7 +15,7 @@ spec:
       serviceAccountName: telemetry-access  # See below
       containers:
       - name: fastapi-container
-        image: us-central1-docker.pkg.dev/zinc-window-473418-r5/my-repo/wk7_log:latest
+        image: REPLACE_WITH_IMAGE                # CI will substitute this
         ports:
         - containerPort: 8200
         readinessProbe:
