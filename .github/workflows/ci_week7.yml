@@ -154,7 +154,7 @@ jobs:
         shell: bash
         run: |
           if [ -n "$EXTERNAL_IP" ]; then
-            curl -s -X POST "http://$EXTERNAL_IP/predict/" \
+            curl -s -X POST "http://$EXTERNAL_IP/predict" \
               -H "Content-Type: application/json" \
               -d '{"sepal_length":5.1,"sepal_width":3.5,"petal_length":1.4,"petal_width":0.2}' || true
           fi
