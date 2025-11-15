@@ -34,9 +34,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Pull data from DVC
-        run: dvc pull -v
-
       # No unit tests in Week 8.
       # Instead, run training with different poison_fraction levels
       - name: Run training for multiple poison levels
