@@ -1,0 +1,122 @@
+name: Week8 – Data poisoning experiments
+
+on:
+  push:
+    branches: [ dev, master ]
+  pull_request:
+    branches: [ dev, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  # External IP of the VM that runs the MLflow server
+  VM_EXTERNAL_IP: ${{ secrets.VM_EXTERNAL_IP }}
+
+jobs:
+  train-and-report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      # - uses: iterative/setup-cml@v2
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install cml
+
+      - name: Pull data from DVC
+        run: dvc pull -v
+
+      # No unit tests in Week 8.
+      # Instead, run training with different poison_fraction levels
+      - name: Run training for multiple poison levels
+        run: |
+          mkdir -p metrics
+
+          # Run 4 experiments with different poison_fraction values
+          python train_week8.py \
+            --data data.csv \
+            --model models/model_pf_0.joblib \
+            --metrics metrics/metrics_pf_0.json \
+            --poison_fraction 0.0 \
+            --vm_external_ip "${VM_EXTERNAL_IP}" \
+            --noise_std 5.0 \
+            --max_depth 5
+
+          python train_week8.py \
+            --data data.csv \
+            --model models/model_pf_005.joblib \
+            --metrics metrics/metrics_pf_005.json \
+            --poison_fraction 0.05 \
+            --vm_external_ip "${VM_EXTERNAL_IP}" \
+            --noise_std 5.0 \
+            --max_depth 5
+
+          python train_week8.py \
+            --data data.csv \
+            --model models/model_pf_010.joblib \
+            --metrics metrics/metrics_pf_010.json \
+            --poison_fraction 0.10 \
+            --vm_external_ip "${VM_EXTERNAL_IP}" \
+            --noise_std 5.0 \
+            --max_depth 5
+
+          python train_week8.py \
+            --data data.csv \
+            --model models/model_pf_050.joblib \
+            --metrics metrics/metrics_pf_050.json \
+            --poison_fraction 0.50 \
+            --vm_external_ip "${VM_EXTERNAL_IP}" \
+            --noise_std 5.0 \
+            --max_depth 5
+
+          # Build a single CSV with metrics for all runs
+          python - << 'PY'
+          import json, pathlib
+
+          metrics_dir = pathlib.Path("metrics")
+          rows = [("poison_fraction", "accuracy", "f1_macro")]
+
+          mapping = [
+              ("0.00",  metrics_dir / "metrics_pf_0.json"),
+              ("0.05",  metrics_dir / "metrics_pf_005.json"),
+              ("0.10",  metrics_dir / "metrics_pf_010.json"),
+              ("0.50",  metrics_dir / "metrics_pf_050.json"),
+          ]
+
+          for pf, path in mapping:
+              with path.open() as f:
+                  m = json.load(f)
+              rows.append((pf, m.get("accuracy"), m.get("f1_macro")))
+
+          with open("metrics.csv", "w") as f:
+              for r in rows:
+                  f.write(",".join(str(x) for x in r) + "\n")
+          PY
+
+      - name: Create CML report
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "## Week 8 – Data poisoning results" > report.md
+          echo "" >> report.md
+
+          echo "| Poison fraction | Accuracy | F1 macro |" >> report.md
+          echo "|-----------------|----------|---------|" >> report.md
+
+          tail -n +2 metrics.csv | while IFS=, read -r pf acc f1; do
+            printf "| %s | %.4f | %.4f |\n" "$pf" "$acc" "$f1" >> report.md
+          done
+
+          cml comment create report.md

@@ -1,8 +1,10 @@
 {
   "n_samples": 150,
   "accuracy": 0.8666666666666667,
-  "f1_macro": 0.8666666666666667,
-  "timestamp": "2025-11-02 13:42:46",
-  "max_depth": 3,
-  "random_state": 42
+  "f1_macro": 0.8632936507936507,
+  "timestamp": "2025-11-15 07:37:49",
+  "max_depth": 5,
+  "random_state": 123,
+  "poison_fraction": 0.5,
+  "noise_std": 5.0
 }
