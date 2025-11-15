@@ -49,7 +49,7 @@ jobs:
       # Instead, run training with different poison_fraction levels
       - name: Run training for multiple poison levels
         run: |
-          mkdir -p metrics
+          mkdir -p metrics models
 
           # Run 4 experiments with different poison_fraction values
           python train_week8.py \
